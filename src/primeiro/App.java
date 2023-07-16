@@ -1,9 +1,6 @@
 package primeiro;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class App implements Runnable{
 
@@ -21,72 +18,43 @@ public class App implements Runnable{
             return;
         }
 
-        int[] values = new int[size];
+        ArrayList<Integer> valores = new ArrayList<>();
+
         for (int i = 0; i < size; i++){
             System.out.println("Digite o valor para o elemento N:" + String.valueOf(i+1));
-            values[i] = scanner.nextInt();
+            valores.add(scanner.nextInt());
         }
 
-        System.out.println("\n Resultado: \n");
+        printResultado(separarParImpar(valores));
 
-        int [][] resultado = separarValores(values);
-        Arrays.sort(resultado[0]);
-        Arrays.sort(resultado[1]);
-        resultado[1] = sortDesc(resultado[1]);
-        printArray(resultado[0],Optional.of("Pares - Asc"));
-        printArray(resultado[1],Optional.of("\nInpares - Desc"));
     }
 
-    private int[] sortDesc(int[] ints) {
-        int[] result = new int[ints.length];
-        for (int i = 0; i < ints.length; i++){
-            result[i] = ints[ints.length - i - 1];
+    private ArrayList<ArrayList<Integer>>  separarParImpar(ArrayList<Integer> valores){
+        ArrayList<Integer> inpares = new ArrayList<>();
+        ArrayList<Integer> pares = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> resultado = new ArrayList<>();
+        for (int i : valores){
+            if (i % 2 == 0){
+                pares.add(i);
+            }
+            else inpares.add(i);
         }
-        return result;
+        Collections.sort(pares);
+        Collections.sort(inpares, Collections.reverseOrder());
+        resultado.add(pares);
+        resultado.add(inpares);
+        return resultado;
     }
 
-    private void testeSoma(int[] array){
-        int soma = 0;
-        for (int i : array){
-            soma = soma + i;
+    private void printResultado(ArrayList<ArrayList<Integer>> myResults){
+        System.out.println("\nPares: Asc\n");
+        for (int i : myResults.get(0)){
+            System.out.println(i);
         }
-        System.out.println("TESTE - SOMA : " + String.valueOf(soma));
-    }
-
-    private void printArray(int[] array, Optional<String> header){
-        if (header.isPresent()){
-            System.out.println(header.get());
-        }
-        for (int i : array){
+        System.out.println("\nInpares: Desc\n");
+        for (int i : myResults.get(1)){
             System.out.println(i);
         }
     }
 
-    private int[][] separarValores(int[] array){
-        int [] pares;
-        int [] inpares;
-        int parIndex = 0;
-        int inparIndex = 0;
-
-        if (array.length % 2 == 0){
-            pares = new int[array.length/2];
-            inpares = new int[array.length/2];
-        }
-        else {
-            pares = new int[array.length/2];
-            inpares = new int[(array.length/2)+1];
-        }
-
-        for (int i : array){
-            if (i % 2 == 0){
-                pares[parIndex] = i;
-                parIndex++;
-            }
-            else {
-                inpares[inparIndex] = i;
-                inparIndex++;
-            }
-        }
-        return new int[][]{pares, inpares};
-    }
 }
